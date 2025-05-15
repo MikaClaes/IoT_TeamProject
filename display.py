@@ -15,7 +15,7 @@ def DeactivateLCD():
     time.sleep(0.000005)
 
 def ChooseFace(temperature, light_amount):
-    if optimal_temperature_min <= temperature <= optimal_temperature_max & optimal_light_min <= light_amount <= optimal_light_max:
+    if optimal_temperature_min <= temperature <= optimal_temperature_max and optimal_light_min <= light_amount <= optimal_light_max:
         face = smile
     else:
         face = sad
@@ -29,27 +29,19 @@ def StopDisplay():
 
 def ChangeDisplay(temp, light):
     #Main code
-    try:
         lcd_1.clear()
         lcd_1.set_backlight(1)
-        while True:
-            for i in range(0, 5):
-                ActivateLCD()
-                LCD.put_string = f"Temperature: {temp}\nLight: {light}"
-                lcd_1.refresh()
-                DeactivateLCD()
-                time.sleep(1)
-            for i in range(0, 60):
-                lcd_1.clear()
-                LCD.draw_image(lcd_1, ChooseFace(temp, light), 84, 48, x = 0, y = 0)
-                lcd_1.refresh()
-                DeactivateLCD()
-                time.sleep(1)
-                lcd_1.clear()
-        
-    except KeyboardInterrupt:
-        StopDisplay()
-        
+        ActivateLCD()
+        lcd_1.put_string(f"Temperature: {temp}\nLight: {light}")
+        lcd_1.refresh()
+        DeactivateLCD()
+        time.sleep(5)
+        lcd_1.clear()
+        LCD.draw_image(lcd_1, ChooseFace(temp, light), 84, 48, x = 0, y = 0)
+        lcd_1.refresh()
+        DeactivateLCD()
+        time.sleep(1)
+        lcd_1.clear()     
 
 #Variables
 smile = [
@@ -139,4 +131,8 @@ wiringpi.pinMode(pin_CS_lcd , 1)            # Set pin to mode 1 ( OUTPUT )
 ActivateLCD()
 lcd_1 = LCD(PIN_OUT)
 
-ChangeDisplay(22, 450)
+try:
+    while True:
+        ChangeDisplay(22, 450)
+except KeyboardInterrupt:
+    StopDisplay()
