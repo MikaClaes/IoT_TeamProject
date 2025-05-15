@@ -15,7 +15,7 @@ def DeactivateLCD():
     time.sleep(0.000005)
 
 def ChooseFace(temperature, light_amount):
-    if optimal_temperature_min <= temperature <= optimal_temperature_max & optimal_light_min <= light_amount <= optimal_light_max:
+    if optimal_temperature_min <= temperature <= optimal_temperature_max and optimal_light_min <= light_amount <= optimal_light_max:
         face = smile
     else:
         face = sad
@@ -27,29 +27,42 @@ def StopDisplay():
     lcd_1.set_backlight(0)
     DeactivateLCD()
 
+
 def ChangeDisplay(temp, light):
-    #Main code
-    try:
-        lcd_1.clear()
-        lcd_1.set_backlight(1)
-        while True:
-            for i in range(0, 5):
-                ActivateLCD()
-                LCD.put_string = f"Temperature: {temp}\nLight: {light}"
-                lcd_1.refresh()
-                DeactivateLCD()
-                time.sleep(1)
-            for i in range(0, 60):
-                lcd_1.clear()
-                LCD.draw_image(lcd_1, ChooseFace(temp, light), 84, 48, x = 0, y = 0)
-                lcd_1.refresh()
-                DeactivateLCD()
-                time.sleep(1)
-                lcd_1.clear()
-        
-    except KeyboardInterrupt:
-        StopDisplay()
-        
+    # Display text
+    lcd_1.clear()
+    ActivateLCD()
+    lcd_1.set_backlight(1)
+    lcd_1.put_string(f"Temperature:\n{temp}°C\nLight:\n{light} lux")
+    lcd_1.refresh()
+    time.sleep(5)
+    
+    # *** KEY CHANGE: Completely reset the display state ***
+    DeactivateLCD()
+    lcd_1.clear()
+    lcd_1.refresh()
+    time.sleep(0.2)
+    ActivateLCD()
+    
+    # Create a new, fresh buffer for the face
+    lcd_1.clear()
+    
+    # Draw face only, no text
+    face = ChooseFace(temp, light)
+    
+    # Try without any previous text operations
+    # Make sure we're passing the correct parameters to draw_image
+    # The x=0, y=0 should explicitly set starting position
+    LCD.draw_image(lcd_1, face, 84, 48, x=0, y=0)
+    lcd_1.refresh()
+    time.sleep(5)
+    
+    # Clean up
+    lcd_1.clear()
+    lcd_1.refresh()
+    lcd_1.set_backlight(0)
+    DeactivateLCD()
+   
 
 #Variables
 smile = [
@@ -138,5 +151,3 @@ wiringpi.wiringPiSPISetupMode(1, 0, 400000, 0)  #(channel, port, speed, mode)
 wiringpi.pinMode(pin_CS_lcd , 1)            # Set pin to mode 1 ( OUTPUT )
 ActivateLCD()
 lcd_1 = LCD(PIN_OUT)
-
-ChangeDisplay(22, 450)
