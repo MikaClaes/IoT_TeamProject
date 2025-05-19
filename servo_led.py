@@ -6,9 +6,9 @@ wiringpi.wiringPiSetup()  # Use WiringPi pin numbering
 
 # Pin definitions
 SERVO_PIN = 2  # Adjust to your WiringPi pin (e.g., 0 for GPIO17)
-LED_RED_PIN =4  # Adjust to your WiringPi pin for red LED
-LED_GREEN_PIN = 6  # Adjust to your WiringPi pin for green LED
-LED_BLUE_PIN = 9 # Adjust to your WiringPi pin for blue LED (unused)
+LED_RED_PIN =5  # Adjust to your WiringPi pin for red LED
+LED_GREEN_PIN = 7  # Adjust to your WiringPi pin for green LED
+LED_BLUE_PIN = 8 # Adjust to your WiringPi pin for blue LED (unused)
 
 # Set pins as output
 wiringpi.pinMode(SERVO_PIN, 1)  # 1 = OUTPUT
@@ -97,3 +97,4 @@ def pomodoro_timer():
         wiringpi.digitalWrite(LED_RED_PIN, 0)  # Ensure LEDs off
         wiringpi.digitalWrite(LED_GREEN_PIN, 0)
         wiringpi.digitalWrite(LED_BLUE_PIN, 0)
+
