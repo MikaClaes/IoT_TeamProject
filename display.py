@@ -151,3 +151,6 @@ wiringpi.wiringPiSPISetupMode(1, 0, 400000, 0)  #(channel, port, speed, mode)
 wiringpi.pinMode(pin_CS_lcd , 1)            # Set pin to mode 1 ( OUTPUT )
 ActivateLCD()
 lcd_1 = LCD(PIN_OUT)
+
+while True:
+    ChangeDisplay(22,200)
