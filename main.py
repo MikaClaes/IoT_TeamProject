@@ -1,4 +1,4 @@
-import speech_recognition as sr
+
 import queue
 import time
 #Functions
