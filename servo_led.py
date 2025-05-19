@@ -97,9 +97,3 @@ def pomodoro_timer():
         wiringpi.digitalWrite(LED_RED_PIN, 0)  # Ensure LEDs off
         wiringpi.digitalWrite(LED_GREEN_PIN, 0)
         wiringpi.digitalWrite(LED_BLUE_PIN, 0)
-
-if __name__ == "__main__":
-    print("Starting Pomodoro timer with servo and RGB LED indication")
-    print("Servo angles: Work (0°), Short Break (180°), Long Break (180°)")
-    print("LED: Red (blink 3x then solid for work), Green (blink 3x then solid for short break), Blue (blink 3x then solid for long break)")
-    pomodoro_timer()

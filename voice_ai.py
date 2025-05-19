@@ -1,31 +1,6 @@
 import speech_recognition as sr
 import queue
 import time
-#Functions
-
-#Variabelen
-optimal_light_min = 450
-optimal_light_max = 500
-optimal_temperature_min = 21.5
-optimal_temperature_max = 22.5
-
-#TODO: Lichtsensor
-
-#TODO: Temp sensor
-
-#TODO: LED-bar
-
-#TODO: Pomodoro Timer
-
-#TODO: Motor (zandloper)
-
-#TODO: Knop
-
-#TODO: Thingspeak
-
-#TODO: Display
-
-#TODO: AI Speech commands
 
 speech_queue = queue.Queue()
 
@@ -88,7 +63,7 @@ def init_speech_recognition():
         return None, None
 
 # Main-loop
-def main():
+def speech_recognition():
     recognizer, stop_listening = init_speech_recognition()
     speech_enabled = stop_listening is not None
 
@@ -107,6 +82,3 @@ def main():
     if speech_enabled:
         stop_listening(wait_for_stop=False)
         print("Spraakherkenning gestopt")
-
-if __name__ == "__main__":
-    main()
