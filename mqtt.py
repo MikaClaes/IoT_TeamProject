@@ -1,38 +1,36 @@
 import requests
-import json
+import time
 
 # ThingSpeak channel settings
 CHANNEL_ID = "2954416"  # Replace with your ThingSpeak Channel ID
 READ_API_KEY = "BHGP4YRDAWHKPPSE"  # Replace with your Read API Key
 BASE_URL = f"https://api.thingspeak.com/channels/{CHANNEL_ID}/feeds.json"
 
-# Function to retrieve data from ThingSpeak
-def get_thingspeak_data():
+# Function to retrieve the last data entry from ThingSpeak
+def get_last_thingspeak_entry():
     try:
-        # Construct the API URL with parameters
         params = {
             "api_key": READ_API_KEY,
-            "results": 10  # Number of data points to retrieve (adjust as needed)
+            "results": 1  # Only get the last entry
         }
         response = requests.get(BASE_URL, params=params)
-        response.raise_for_status()  # Check for HTTP errors
+        response.raise_for_status()
 
-        # Parse the JSON response
         data = response.json()
         feeds = data.get("feeds", [])
 
-        # Process the retrieved data
-        for feed in feeds:
-            print("Entry ID:", feed.get("entry_id"))
-            for field in feed:
-                if field.startswith("field"):
-                    print(f"{field}: {feed[field]}")
-            print("Created at:", feed.get("created_at"))
-            print("---")
+        if feeds:
+            latest_entry = feeds[0]
+            value1 = latest_entry.get("field1")
+            value2 = latest_entry.get("field2")
+            print("Field1:", value1)
+            print("Field2:", value2)
+            print("Created at:", latest_entry.get("created_at"))
+            return value1, value2
+        else:
+            print("No data found.")
+            return None, None
 
     except requests.exceptions.RequestException as e:
         print(f"Error retrieving data: {e}")
-
-# Run the function
-while True:
-    get_thingspeak_data()
+        return None, None
