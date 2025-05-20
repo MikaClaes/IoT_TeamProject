@@ -3,7 +3,7 @@ import time
 import wiringpi
 import spidev
 from ClassLCD import LCD
-from main import optimal_light_min, optimal_light_max, optimal_temperature_min, optimal_temperature_max
+
 
 #Functions
 def ActivateLCD():
@@ -35,7 +35,7 @@ def ChangeDisplay(light, temp):
     lcd_1.set_backlight(1)
     lcd_1.put_string(f"Light:\n{light} lux\nTemperature:\n{temp}°C")
     lcd_1.refresh()
-    time.sleep(5)
+    time.sleep(9)
     
     # *** KEY CHANGE: Completely reset the display state ***
     DeactivateLCD()
@@ -65,6 +65,10 @@ def ChangeDisplay(light, temp):
    
 
 #Variables
+optimal_light_min = 450
+optimal_light_max = 500
+optimal_temperature_min = 21.5
+optimal_temperature_max = 22.5
 smile = [
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0xc0, 0xc0, 0xf8, 0xf8, 0xf8, 0x38, 0x38, 0x38, 0x3f, 0x3f, 
