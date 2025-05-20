@@ -1,6 +1,8 @@
 import threading
 from servo_led import pomodoro_timer
 from voice_ai import speech_recognition
+from mqtt import get_last_thingspeak_entry
+from display import ChangeDisplay
 
 
 #Functions
@@ -12,6 +14,11 @@ def timer_thread():
 
 def ai_thread():
     speech_recognition()
+    ChangeDisplay(current_lux, current_temp)
+
+def display_thread():
+    current_lux, current_temp = get_last_thingspeak_entry()
+
 
 #Variabelen
 optimal_light_min = 450
@@ -24,10 +31,12 @@ current_lux = 0
 # Multithread setup with separate threads for each function
 timer = threading.Thread(target=timer_thread)
 ai = threading.Thread(target=ai_thread)
+display =threading.Thread(target=display_thread)
 
 # Start all threads
 timer.start()
 ai.start()
+display.start()
 
 #TEST: Lichtsensor
 

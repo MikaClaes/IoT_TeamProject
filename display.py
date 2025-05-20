@@ -14,7 +14,7 @@ def DeactivateLCD():
     wiringpi.digitalWrite(pin_CS_lcd, 1)       # Deactived LCD using CS
     time.sleep(0.000005)
 
-def ChooseFace(temperature, light_amount):
+def ChooseFace(light_amount, temperature):
     if optimal_temperature_min <= temperature <= optimal_temperature_max and optimal_light_min <= light_amount <= optimal_light_max:
         face = smile
     else:
@@ -28,12 +28,12 @@ def StopDisplay():
     DeactivateLCD()
 
 
-def ChangeDisplay(temp, light):
+def ChangeDisplay(light, temp):
     # Display text
     lcd_1.clear()
     ActivateLCD()
     lcd_1.set_backlight(1)
-    lcd_1.put_string(f"Temperature:\n{temp}°C\nLight:\n{light} lux")
+    lcd_1.put_string(f"Light:\n{light} lux\nTemperature:\n{temp}°C")
     lcd_1.refresh()
     time.sleep(5)
     
@@ -151,6 +151,3 @@ wiringpi.wiringPiSPISetupMode(1, 0, 400000, 0)  #(channel, port, speed, mode)
 wiringpi.pinMode(pin_CS_lcd , 1)            # Set pin to mode 1 ( OUTPUT )
 ActivateLCD()
 lcd_1 = LCD(PIN_OUT)
-
-while True:
-    ChangeDisplay(22,200)
