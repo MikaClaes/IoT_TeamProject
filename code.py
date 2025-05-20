@@ -45,13 +45,16 @@ def connect_and_publish():
             pressure = bmp280.pressure
             lux = bh1750.lux
 
+            print(f"Light: {lux:.2f} lux")
+            print(f"Temperature: {temp:.2f} °C")
+
             # Create payload for ThingSpeak
             payload = f"field1={lux:.2f}&field2={temp:.2f}&status=MQTTPUBLISH"
             mqtt_client.publish(MQTT_TOPIC, payload)
-
-            yield temp, lux
 
             time.sleep(15)  # ThingSpeak rate limit
     except Exception as e:
         print("MQTT Error:", e)
         time.sleep(5)
+
+connect_and_publish()
