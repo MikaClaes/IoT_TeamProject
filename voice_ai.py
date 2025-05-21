@@ -197,9 +197,7 @@ def check_internet_connection():
     except:
         return False
 
-def main():
-    print("Orange Pi Spraakbesturing - Verbeterde versie")
-    
+def speech_recognition():
     # Check internet connection
     if not check_internet_connection():
         print("WAARSCHUWING: Geen internetverbinding gedetecteerd. Spraakherkenning vereist internet.")
@@ -256,6 +254,3 @@ def main():
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-if __name__ == "__main__":
-    main()
