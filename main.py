@@ -1,8 +1,9 @@
 import threading
 from servo_led import pomodoro_timer
-#from voice_ai import speech_recognition
+from voice_ai import speech_recognition
 from mqtt import get_last_thingspeak_entry
 from display import ChangeDisplay
+from drukknop import button_press
 import time
 
 #Functions
@@ -13,7 +14,8 @@ def timer_thread():
     pomodoro_timer()
 
 
-
+def voice_ai_thread():
+    speech_recognition()
     
 
 def display_thread():
@@ -21,38 +23,23 @@ def display_thread():
         current_lux, current_temp = get_last_thingspeak_entry()
         ChangeDisplay(float(current_lux), float(current_temp))
         
-
-
 #Variabelen
-
 current_temp = 0
 current_lux = 0
 
 # Multithread setup with separate threads for each function
 timer = threading.Thread(target=timer_thread)
-
+ai = threading.Thread(target=voice_ai_thread)
 display =threading.Thread(target=display_thread)
 
 # Start all threads
 timer.start()
-
+ai.start()
 display.start()
-
-#TEST: Lichtsensor
-
-#TEST: Temp sensor
 
 #TODO: LED-bar
 
-#TEST: Pomodoro Timer
+#FIX: Display
 
-#TEST: Motor (zandloper)
-
-#TODO: Knop: voor in de bib
-
-#TEST: Thingspeak
-
-#IMPLEMENT: Display
-
-#TODO: AI Speech commands
+#TEST: AI Speech commands
 
