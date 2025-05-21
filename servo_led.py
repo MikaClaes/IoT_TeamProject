@@ -39,62 +39,64 @@ def blink_led(pin, times=3, duration=0.5):
         wiringpi.digitalWrite(pin, 0)
         time.sleep(duration)
 
-def pomodoro_timer():
-    """Run a Pomodoro timer with servo and RGB LED indication."""
-    WORK_TIME = 10  # 25 minutes in seconds
-    SHORT_BREAK = 5   # 5 minutes in seconds
-    LONG_BREAK = 20 # 15 minutes in seconds
-    CYCLES = 4  # Number of work sessions before a long break
+def pomodoro_timer(paused_event):
+    WORK_TIME = 10
+    SHORT_BREAK = 5
+    LONG_BREAK = 20
+    CYCLES = 4
 
     try:
         cycle_count = 0
         while True:
             for _ in range(CYCLES):
-                # Work session
                 print("Work session: 25 minutes")
-                set_servo_angle(0)  # Servo at 0° for work
-                wiringpi.digitalWrite(LED_RED_PIN, 0)  # Ensure red off
-                wiringpi.digitalWrite(LED_GREEN_PIN, 0)  # Ensure green off
-                wiringpi.digitalWrite(LED_BLUE_PIN, 0)  # Ensure blue off
-                blink_led(LED_RED_PIN, 3)  # Blink red 3 times
-                wiringpi.digitalWrite(LED_RED_PIN, 1)  # Solid red
-                time.sleep(WORK_TIME)
-                wiringpi.digitalWrite(LED_RED_PIN, 0)  # Turn off red
-                
-                # Short break
+                set_servo_angle(0)
+                blink_led(LED_RED_PIN, 3)
+                wiringpi.digitalWrite(LED_RED_PIN, 1)
+
+                countdown(WORK_TIME, paused_event)
+
+                wiringpi.digitalWrite(LED_RED_PIN, 0)
+
                 print("Short break: 5 minutes")
-                set_servo_angle(180)  # Servo at 180° for short break
-                wiringpi.digitalWrite(LED_RED_PIN, 0)  # Ensure red off
-                wiringpi.digitalWrite(LED_GREEN_PIN, 0)  # Ensure green off
-                wiringpi.digitalWrite(LED_BLUE_PIN, 0)  # Ensure blue off
-                blink_led(LED_GREEN_PIN, 3)  # Blink green 3 times
-                wiringpi.digitalWrite(LED_GREEN_PIN, 1)  # Solid green
-                time.sleep(SHORT_BREAK)
-                wiringpi.digitalWrite(LED_GREEN_PIN, 0)  # Turn off green
+                set_servo_angle(180)
+                blink_led(LED_GREEN_PIN, 3)
+                wiringpi.digitalWrite(LED_GREEN_PIN, 1)
+
+                countdown(SHORT_BREAK, paused_event)
+
+                wiringpi.digitalWrite(LED_GREEN_PIN, 0)
                 cycle_count += 1
-            
-            # Long break after 4 cycles
+
             print("Long break: 15 minutes")
-            set_servo_angle(180)  # Servo at 180° for long break
-            wiringpi.digitalWrite(LED_RED_PIN, 0)  # Ensure red off
-            wiringpi.digitalWrite(LED_GREEN_PIN, 0)  # Ensure green off
-            wiringpi.digitalWrite(LED_BLUE_PIN, 0)  # Ensure blue off
-            blink_led(LED_BLUE_PIN, 3)  # Blink blue 3 times
-            wiringpi.digitalWrite(LED_BLUE_PIN, 1)  # Solid blue
-            time.sleep(LONG_BREAK)
-            wiringpi.digitalWrite(LED_BLUE_PIN, 0)  # Turn off blue
-            cycle_count = 0  # Reset cycle count
+            set_servo_angle(180)
+            blink_led(LED_BLUE_PIN, 3)
+            wiringpi.digitalWrite(LED_BLUE_PIN, 1)
+
+            countdown(LONG_BREAK, paused_event)
+
+            wiringpi.digitalWrite(LED_BLUE_PIN, 0)
+            cycle_count = 0
 
     except KeyboardInterrupt:
-        print("\nStopping Pomodoro timer")
+        print("Pomodoro gestopt")
+    finally:
         wiringpi.digitalWrite(SERVO_PIN, 0)
         wiringpi.digitalWrite(LED_RED_PIN, 0)
         wiringpi.digitalWrite(LED_GREEN_PIN, 0)
         wiringpi.digitalWrite(LED_BLUE_PIN, 0)
-    
-    finally:
-        wiringpi.digitalWrite(SERVO_PIN, 0)  # Ensure servo signal off
-        wiringpi.digitalWrite(LED_RED_PIN, 0)  # Ensure LEDs off
-        wiringpi.digitalWrite(LED_GREEN_PIN, 0)
-        wiringpi.digitalWrite(LED_BLUE_PIN, 0)
 
+def countdown(duration, paused_event):
+    remaining = duration
+    while remaining > 0:
+        if paused_event.is_set():
+            print("Timer gepauzeerd")
+            wiringpi.digitalWrite(LED_RED_PIN, 0)
+            wiringpi.digitalWrite(LED_GREEN_PIN, 0)
+            wiringpi.digitalWrite(LED_BLUE_PIN, 1)  # Blauwe LED aan
+            while paused_event.is_set():
+                time.sleep(0.1)
+            wiringpi.digitalWrite(LED_BLUE_PIN, 0)  # Blauwe LED uit
+            print("Timer hervat")
+        time.sleep(1)
+        remaining -= 1
