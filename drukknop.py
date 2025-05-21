@@ -1,6 +1,7 @@
 import wiringpi
 import time
 
+
 def button_press(paused_event):
     pinSwitch = 3
     wiringpi.wiringPiSetup()
